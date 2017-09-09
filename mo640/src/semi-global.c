@@ -28,7 +28,7 @@
 #include <ctype.h>
 
 #define smax 17
-#define DEBUG 1
+//#define DEBUG 1
 //#define VERBOSE 1
 int gap = -5;
 int match = 3;
@@ -102,13 +102,18 @@ int alignsemi(int idxi, int idxj, char *s1, char *s2) {
 	align1[idx1] = '\0';
 	align2[idx2] = '\0';
 	
+	#ifdef DEBUG
 	printf("align1: %s. \nalign2: %s. \n", align1, align2);
+	#endif
+	
 	/* Reverse */
 	int aux = strlen(align1);
+	
+	printf("\t");
 	for (i=1; i <= aux; i++){
 		printf("%c", toupper(align1[aux-i]));
 	}
-	printf("\n");
+	printf("\n\t");
 	for (i=1; i <= aux; i++){
 		printf("%c", toupper(align2[aux-i]));
 	}
@@ -153,8 +158,9 @@ int main(int argc, char **argv)
 	/* Initialize */
 	strcpy(s1, argv[1]);
 	strcpy(s2, argv[2]);
-	printf("s1: %s\n", s1);
-	printf("s2: %s\n", s2);
+	printf("[!] Starting SEMI-GLOBAL alignment.\n");
+	printf("\tSequence 1: %s\n", s1);
+	printf("\tSequence 2: %s\n", s2);
 	int i, j;
 	
 	/* Just dont do it ;)
