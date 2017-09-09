@@ -25,15 +25,106 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
-#define smax 17
-#define DEBUG 1
+#define smax 33
+//#define DEBUG 1
 //#define VERBOSE 1
-int gap = -99;
-int match = 3;
-int ssmatch = -2;
+int gap = -5;
+int match = 5;
+int ssmatch = -10;
 int memo[smax][smax];
 
+int alignsemi(int idxi, int idxj, char *s1, char *s2) {
+	char align1[2*smax-1];
+	char align2[2*smax-1];
+	
+	int j = idxj;
+	int i = idxi;
+	int idx1 = 0;
+	int idx2 = 0;
+	
+	/* Last line */
+	if (idxi == strlen(s2)) {
+		int aux = strlen(s1);
+		while (aux > idxj) {
+			align1[idx1++] = s1[aux-1];
+			align2[idx2++] = '-';
+			aux--;
+		}
+	} else { /* Last column */
+		int aux = strlen(s2);
+		while (aux > idxi) {
+			align1[idx1++] = '-';
+			align2[idx2++] = s2[aux-1];
+			aux--;
+		}
+	}
+	
+	while (i > 0 && j > 0) {
+		if (memo[i][j] - memo[i][j-1] == gap) {
+			align1[idx1++] = s1[j-1];
+			align2[idx2++] = '-';
+			j--;
+		}
+		else {
+			 if (memo[i][j] - memo[i-1][j] == gap) {
+				 align1[idx1++] = '-';
+				 align2[idx2++] = s2[i-1];
+				 i--;
+			 } else {
+				align1[idx1++] = s1[j-1];
+				align2[idx2++] = s2[i-1];
+				i--;
+				j--;
+			}
+			
+		}
+	}
+	
+	/* First line */
+	if (i == 0) {
+		while (j > 0) {
+			align1[idx1++] = s1[j-1];
+			align2[idx2++] = '-';
+			j--;
+		}
+	}
+	/* First column */
+	if (j==0) { 
+		while (i > 0) {
+			align1[idx1++] = '-';
+			align2[idx2++] = s2[i-1];
+			i--;
+		}
+	}
+	
+	align1[idx1] = '\0';
+	align2[idx2] = '\0';
+	
+	#ifdef DEBUG
+	printf("align1: %s. \nalign2: %s. \n", align1, align2);
+	#endif
+	
+	/* Reverse */
+	int aux = strlen(align1);
+	/* Custom superstring problem variable */
+	char *superstring = calloc(aux, sizeof(char));
+	
+	printf("\t");
+	for (i=1; i <= aux; i++){
+		printf("%c", toupper(align1[aux-i]));
+		superstring[i-1] = toupper(align1[aux-i]);
+	}
+	printf("\n\t");
+	for (i=1; i <= aux; i++){
+		printf("%c", toupper(align2[aux-i]));
+		if (align2[aux-i] != '-') superstring[i-1] = toupper(align2[aux-i]);
+	}
+	printf("\n%ld: %s\n\n", strlen(superstring), superstring);
+	
+	free(superstring);
+}
 
 int main(int argc, char **argv)
 {
@@ -72,8 +163,9 @@ int main(int argc, char **argv)
 	/* Initialize */
 	strcpy(s1, argv[1]);
 	strcpy(s2, argv[2]);
-	printf("s1: %s\n", s1);
-	printf("s2: %s\n", s2);
+	printf("[!] Starting SEMI-GLOBAL alignment.\n");
+	printf("\tSequence 1: %s\n", s1);
+	printf("\tSequence 2: %s\n", s2);
 	int i, j;
 	
 	/* Just dont do it ;)
@@ -111,18 +203,27 @@ int main(int argc, char **argv)
 	}
 	printf("\n");
 	
+	/* Find best alignment value */
+	int line, col;
+	max = -99;
+	
 	for (i=1; i<=n; i++) {
 		for (j=0; j<=m; j++) {
 			if (j==0) {
 				printf("%c\t", s2[i-1]);
 			} else {
 				printf("%2d\t", memo[i][j]);
+				if ( (j==m || i==n) &&  memo[i][j] > max) {
+					line = i;
+					col = j;
+					max  = memo[i][j];
+				}
 			}
 		}
 		printf("\n");
 	}
 	
-	
+	printf("Optimal #SEMI-GLOBAL# alignment value: %d.\n", memo[line][col]);
+	alignsemi(line, col, s1, s2);
 	return 0;
 }
-
