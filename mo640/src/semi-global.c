@@ -1,7 +1,7 @@
 /*
- * global.c
+ * semi-global.c
  * 
- * Copyright 2017 A Gomes <gomes@Invoker>
+ * Copyright 2017 A Gomes <agomes@lasca.ic.unicamp.br>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define smax 17
+#define smax 33
 //#define DEBUG 1
 //#define VERBOSE 1
 int gap = -5;
