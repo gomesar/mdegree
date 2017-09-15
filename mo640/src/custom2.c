@@ -1,5 +1,5 @@
 /*
- * custom1.c
+ * custom2.c
  * 
  * Copyright 2017 A Gomes <agomes@lasca.ic.unicamp.br>
  * 
@@ -18,9 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * 
+ * Lista 1 - Questao 6
  */
-
 
 #include <stdio.h>
 #include <string.h>
@@ -28,41 +27,24 @@
 #include <ctype.h>
 
 #define smax 33
+//#define ALG_NAME "<Custom2>";
 //#define DEBUG 1
 //#define VERBOSE 1
-char alg_type[16] = "<Custom1>";
 int gap = -5;
-int match = 5;
-int ssmatch = -10;
+int match = 3;
+int ssmatch = -10;	
 int memo[smax][smax];
 
-int alignsemi(int idxi, int idxj, char *s1, char *s2) {
+int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	char align1[2*smax-1];
 	char align2[2*smax-1];
 	
-	int j = idxj;
-	int i = idxi;
-	int idx1 = 0;
-	int idx2 = 0;
+	int j = idxj;	// sequence alpha (columns)
+	int i = idxi;	// sequence beta (lines)
+	int idx1 = 0;	// alignment 1
+	int idx2 = 0;	// alignment 2
 	
-	/* Last line */
-	if (idxi == strlen(s2)) {
-		int aux = strlen(s1);
-		while (aux > idxj) {
-			align1[idx1++] = s1[aux-1];
-			align2[idx2++] = '-';
-			aux--;
-		}
-	} else { /* Last column */
-		int aux = strlen(s2);
-		while (aux > idxi) {
-			align1[idx1++] = '-';
-			align2[idx2++] = s2[aux-1];
-			aux--;
-		}
-	}
-	
-	while (i > 0 && j > 0) {
+	while (memo[i][j] > 0) {
 		if (memo[i][j] - memo[i][j-1] == gap) {
 			align1[idx1++] = s1[j-1];
 			align2[idx2++] = '-';
@@ -79,24 +61,6 @@ int alignsemi(int idxi, int idxj, char *s1, char *s2) {
 				i--;
 				j--;
 			}
-			
-		}
-	}
-	
-	/* First line */
-	if (i == 0) {
-		while (j > 0) {
-			align1[idx1++] = s1[j-1];
-			align2[idx2++] = '-';
-			j--;
-		}
-	}
-	/* First column */
-	if (j==0) { 
-		while (i > 0) {
-			align1[idx1++] = '-';
-			align2[idx2++] = s2[i-1];
-			i--;
 		}
 	}
 	
@@ -109,24 +73,31 @@ int alignsemi(int idxi, int idxj, char *s1, char *s2) {
 	
 	/* Reverse */
 	int aux = strlen(align1);
-	/* Custom superstring problem variable */
-	char *superstring = calloc(aux, sizeof(char));
+	int tmp;
 	
 	printf("\t");
-	for (i=1; i <= aux; i++){
-		printf("%c", toupper(align1[aux-i]));
-		superstring[i-1] = toupper(align1[aux-i]);
+	
+	for (tmp=0; tmp < j; tmp++) {	/* head */
+		printf("-");
 	}
+	for (tmp=1; tmp <= aux; tmp++){
+		printf("%c", toupper(align1[aux-tmp]));
+	}
+	for (tmp=idxj; tmp <strlen(s1); tmp++) {	/* tail */
+		printf("-");
+	}
+	
 	printf("\n\t");
-	for (i=1; i <= aux; i++){
-		printf("%c", toupper(align2[aux-i]));
-		if (align2[aux-i] != '-') superstring[i-1] = toupper(align2[aux-i]);
+	for (tmp=0; tmp < i; tmp++) {	/* head */
+		printf("-");
 	}
-	superstring[i-1] = '\0';
-	
-	printf("\n%ld: %s\n\n", strlen(superstring), superstring);
-	
-	free(superstring);
+	for (tmp=1; tmp <= aux; tmp++){
+		printf("%c", toupper(align2[aux-tmp]));
+	}
+	for (tmp=idxi; tmp <strlen(s2); tmp++) {	/* tail */
+		printf("-");
+	}
+	printf("\n\n");
 }
 
 int main(int argc, char **argv)
@@ -166,7 +137,7 @@ int main(int argc, char **argv)
 	/* Initialize */
 	strcpy(s1, argv[1]);
 	strcpy(s2, argv[2]);
-	printf("[!] Starting %s alignment.\n", alg_type);
+	printf("[!] Starting <Custom2> alignment.\n");
 	printf("\tSequence 1: %s\n", s1);
 	printf("\tSequence 2: %s\n", s2);
 	int i, j;
@@ -180,15 +151,37 @@ int main(int argc, char **argv)
 	
 	/* Start */
 	int max;
+	int runi, runj, set;
 	for (i=1; i<=n; i++) {
-		for (j=1; j<=m; j++) {
-			/* Start with diagonal */
-			max = memo[i-1][j-1];
-			max += (s1[j-1] == s2[i-1]) ? match : ssmatch;
-			//printf("[%c - %c]\n", s1[j], s2[i]);
-			/* Test gaps */
-			if (memo[i][j-1] + gap > max) max = memo[i][j-1] + gap;
-			if (memo[i-1][j] + gap > max) max = memo[i-1][j] + gap;
+		for (j=i+1; j<=m; j++) {
+			/* Custom change : disallowing position re-use */
+			/*
+			set = 0;
+			runi = i-1;
+			runj = j-1;
+			
+			while (memo[runi][runj] != 0 && set==0) {
+				if (i-1 ==j || j-1 == i) {
+					max = 0;
+					set = 1
+				}
+			} */
+			
+			//if (set == 0) {
+			int ret = j-i > i ? i: j-i;
+			
+			#ifdef DEBUG
+			printf("D[%d][%d].\n",i-ret, j-ret);
+			#endif
+			
+			if (memo[i-ret][j-ret] == 0) {
+				/* Start with diagonal ( Match or missmatch) */
+				
+				max = memo[i-1][j-1];
+				max += (s1[j-1] == s2[i-1]) ? match : ssmatch;
+				//printf("[%c - %c]\n", s1[j], s2[i]);
+			} 
+			//max = max < 0 ? 0 : max;
 			/* Save value */
 			memo[i][j] = max;
 			#ifdef VERBOSE
@@ -208,7 +201,7 @@ int main(int argc, char **argv)
 	
 	/* Find best alignment value */
 	int line, col;
-	max = -99;
+	max = 0;
 	
 	for (i=1; i<=n; i++) {
 		for (j=0; j<=m; j++) {
@@ -216,7 +209,7 @@ int main(int argc, char **argv)
 				printf("%c\t", s2[i-1]);
 			} else {
 				printf("%2d\t", memo[i][j]);
-				if ( (j==m || i==n) &&  memo[i][j] > max) {
+				if (memo[i][j] > max) {
 					line = i;
 					col = j;
 					max  = memo[i][j];
@@ -226,7 +219,7 @@ int main(int argc, char **argv)
 		printf("\n");
 	}
 	
-	printf("Optimal %s alignment value: %d.\n", alg_type, memo[line][col]);
-	alignsemi(line, col, s1, s2);
+	printf("Optimal <Custom2> alignment value: %d.\n", memo[line][col]);
+	alignlocal(line, col, s1, s2);
 	return 0;
 }
