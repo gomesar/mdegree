@@ -45,23 +45,11 @@ int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	int idx2 = 0;	// alignment 2
 	
 	while (memo[i][j] > 0) {
-		if (memo[i][j] - memo[i][j-1] == gap) {
-			align1[idx1++] = s1[j-1];
-			align2[idx2++] = '-';
-			j--;
-		}
-		else {
-			 if (memo[i][j] - memo[i-1][j] == gap) {
-				 align1[idx1++] = '-';
-				 align2[idx2++] = s2[i-1];
-				 i--;
-			 } else {
-				align1[idx1++] = s1[j-1];
-				align2[idx2++] = s2[i-1];
-				i--;
-				j--;
-			}
-		}
+		align1[idx1++] = s1[j-1];
+		align2[idx2++] = s2[i-1];
+		i--;
+		j--;
+
 	}
 	
 	align1[idx1] = '\0';
@@ -115,12 +103,12 @@ int main(int argc, char **argv)
 	m = (int) strlen(argv[1]); // Long int to int
 	n = (int) strlen(argv[2]);
 	
-	if (m > sizeof(s1)) {
+	if (m > sizeof(s1)-1) {
 		printf("string1 is too big. (%d)\n", m);
 		return 1;
 	}
 	
-	if (n > sizeof(s1)) {
+	if (n > sizeof(s1)-1) {
 		printf("string2 is too big. (%d\n", n);
 		return 1;
 	}
@@ -154,34 +142,23 @@ int main(int argc, char **argv)
 	int runi, runj, set;
 	for (i=1; i<=n; i++) {
 		for (j=i+1; j<=m; j++) {
+			max = 0;
 			/* Custom change : disallowing position re-use */
-			/*
-			set = 0;
-			runi = i-1;
-			runj = j-1;
-			
-			while (memo[runi][runj] != 0 && set==0) {
-				if (i-1 ==j || j-1 == i) {
-					max = 0;
-					set = 1
-				}
-			} */
-			
-			//if (set == 0) {
 			int ret = j-i > i ? i: j-i;
 			
 			#ifdef DEBUG
-			printf("D[%d][%d].\n",i-ret, j-ret);
+			printf("memo[%d][%d] = %d.\n",i-ret, j-ret, memo[i-ret][j-ret]);
 			#endif
 			
 			if (memo[i-ret][j-ret] == 0) {
-				/* Start with diagonal ( Match or missmatch) */
+				/* Only accept matches */
+				max = (s1[j-1] == s2[i-1]) ? memo[i-1][j-1] + match : 0;
 				
-				max = memo[i-1][j-1];
-				max += (s1[j-1] == s2[i-1]) ? match : ssmatch;
-				//printf("[%c - %c]\n", s1[j], s2[i]);
+				#ifdef DEBUG
+				printf("[%c - %c]\n", s1[j], s2[i]);
+				#endif
 			} 
-			//max = max < 0 ? 0 : max;
+;
 			/* Save value */
 			memo[i][j] = max;
 			#ifdef VERBOSE
