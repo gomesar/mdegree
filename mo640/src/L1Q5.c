@@ -1,5 +1,6 @@
 /*
- * custom2.c
+ * L1Q5.c
+ * baseado em local.c
  * 
  * Copyright 2017 A Gomes <agomes@lasca.ic.unicamp.br>
  * 
@@ -34,6 +35,7 @@ int gap = -5;
 int match = 3;
 int ssmatch = -10;	
 int memo[smax][smax];
+
 
 int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	char align1[2*smax-1];
@@ -88,6 +90,7 @@ int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	printf("\n\n");
 }
 
+
 int main(int argc, char **argv)
 {
 	char s1[smax-1];
@@ -125,7 +128,7 @@ int main(int argc, char **argv)
 	/* Initialize */
 	strcpy(s1, argv[1]);
 	strcpy(s2, argv[2]);
-	printf("[!] Starting <Custom2> alignment.\n");
+	printf("[!] Starting $LOCAL$L1Q5 alignment.\n");
 	printf("\tSequence 1: %s\n", s1);
 	printf("\tSequence 2: %s\n", s2);
 	int i, j;
@@ -196,7 +199,7 @@ int main(int argc, char **argv)
 		printf("\n");
 	}
 	
-	printf("Optimal <Custom2> alignment value: %d.\n", memo[line][col]);
+	printf("Optimal $LOCAL$L1Q5 alignment value: %d.\n", memo[line][col]);
 	alignlocal(line, col, s1, s2);
 	return 0;
 }

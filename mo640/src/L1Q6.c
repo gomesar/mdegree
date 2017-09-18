@@ -1,5 +1,6 @@
 /*
- * global.c
+ * L1Q6.c
+ * baseado em global.c
  * 
  * Copyright 2017 A Gomes <agomes@lasca.ic.unicamp.br>
  * 
@@ -133,7 +134,7 @@ int main(int argc, char **argv)
 	/* Initialize */
 	strcpy(s1, argv[1]);
 	strcpy(s2, argv[2]);
-	printf("[!] Starting GLOBAL:L1Q6 alignment.\n");
+	printf("[!] Starting *GLOBAL*L1Q6 alignment.\n");
 	printf("\tSequence 1: %s\n", s1);
 	printf("\tSequence 2: %s\n", s2);
 	int i, j;
@@ -182,7 +183,7 @@ int main(int argc, char **argv)
 		printf("\n");
 	}
 	
-	printf("Optimal *GLOBAL:L1Q6* alignment value: %d.\n", memo[n][m]);
+	printf("Optimal *GLOBAL*L1Q6 alignment value: %d.\n", memo[n][m]);
 	alignglob(m, n, s1, s2);
 	return 0;
 }
