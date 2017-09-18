@@ -20,6 +20,15 @@
  * MA 02110-1301, USA.
  * 
  * Lista 1 - Questao 5
+ * 
+ * A local alignment between two different strings x and y finds a pair 
+ * of substrings, one in x and the other in y, with maximum similarity.
+ * Suppose that we want to find a pair of (nonoverlapping) substrings 
+ * within string v with maximum similarity (Optimal Inexact Repeat
+ * problem). Computing an optimal local alignment between v and v does
+ * not solve the problem, since the resulting alignment may correspond 
+ * to overlapping substrings. Devise an algorithm for the 
+ * Optimal Inexact Repeat problem.
  */
 
 #include <stdio.h>
@@ -28,15 +37,18 @@
 #include <ctype.h>
 
 #define smax 33
-//#define ALG_NAME "<Custom2>";
 //#define DEBUG 1
-//#define VERBOSE 1
-int gap = -5;
-int match = 3;
-int ssmatch = -10;	
+#define VERBOSE 1
+
+int match =		1;
+int ssmatch =	-5;
+int gap =		-1;
+
+
 int memo[smax][smax];
 
 
+/* param1 and param2 must be the same string */
 int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	char align1[2*smax-1];
 	char align2[2*smax-1];
@@ -77,6 +89,7 @@ int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 		printf("-");
 	}
 	
+	#ifdef VERBOSE
 	printf("\n\t");
 	for (tmp=0; tmp < i; tmp++) {	/* head */
 		printf("-");
@@ -86,6 +99,11 @@ int alignlocal(int idxi, int idxj, char *s1, char *s2) {
 	}
 	for (tmp=idxi; tmp <strlen(s2); tmp++) {	/* tail */
 		printf("-");
+	}
+	#endif
+	printf("\n\tSubsequence: ");
+	for (i=1; i <= aux; i++){
+		printf("%c", toupper(align1[aux-i]));
 	}
 	printf("\n\n");
 }
@@ -98,7 +116,7 @@ int main(int argc, char **argv)
 	
 	/* Check */
 	if (argc < 3) {
-		printf("Use: %s string1 string2\n", argv[0]);
+		printf("Use: %s string string\n\t(YES, they must be the same, sorry about it)\n", argv[0]);
 		return 1;
 	}
 	
@@ -164,11 +182,11 @@ int main(int argc, char **argv)
 			
 			/* Save value */
 			memo[i][j] = max;
-			#ifdef VERBOSE
+			#ifdef DEBUG
 			printf("%2d ", max);
 			#endif
 		}
-		#ifdef VERBOSE
+		#ifdef DEBUG
 		printf("\n");
 		#endif
 	}
