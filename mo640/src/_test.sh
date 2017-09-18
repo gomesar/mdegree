@@ -1,7 +1,7 @@
 #!/bin/bash
-./glob actgtgct atggtct
-./sglob actgttgca tattgct
-./loc gacaacgttactgcttacta cttggccactcccgc
+./bin/glob actgtgct atggtct
+./bin/sglob actgttgca tattgct
+./bin/loc gacaacgttactgcttacta cttggccactcccgc
 
-./alg1 superstringproblem isahardnpproblem
-./alg2 CTGTGCCCTGTGCC CTGTGCCCTGTGCC
+./bin/l1q6 superstringproblem isahardnpproblem
+./bin/l1q5 CTGTGCCCTGTGCC CTGTGCCCTGTGCC

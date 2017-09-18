@@ -30,10 +30,11 @@
 #define smax 33
 //#define DEBUG 1
 //#define VERBOSE 1
-int gap = -5;
-int match = 3;
-int ssmatch = -2;	
+int gap = 3;
+int match = -2;
+int ssmatch = -5;
 int memo[smax][smax];
+
 
 int alignglob(int m, int n, char *s1, char *s2) {
 	char align1[2*smax-1];
