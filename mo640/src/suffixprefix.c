@@ -1,5 +1,5 @@
 /*
- * prefixsufix.c
+ * suffixprefix.c
  * baseado em semi-global.c
  * 
  * Copyright 2017 A Gomes <agomes@lasca.ic.unicamp.br>
@@ -35,7 +35,7 @@
 //#define DEBUG 1
 //#define VERBOSE 1
 int gap = -5;
-int match = 3;
+int match = 1;	// Desire to count how many suffix-prefix alignments were done
 int ssmatch = -2;	
 int memo[smax][smax];
 
