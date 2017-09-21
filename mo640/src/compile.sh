@@ -8,7 +8,7 @@ gcc semi-global.c -o bin/sglob
 gcc local.c -o bin/loc
 gcc L1Q5.c -o bin/l1q5
 gcc L1Q6.c -o bin/l1q6
-gcc sufixprefix.c -o bin/sufpre
+gcc suffixprefix.c -o bin/sufpre
 
 if [ ! -z "$1" ]; then
 	if [ $1 == "test" ]; then

@@ -35,7 +35,7 @@
 //#define DEBUG 1
 //#define VERBOSE 1
 int gap = -5;
-int match = 1;	// Desire to count how many suffix-prefix alignments were done
+int match = 3;	// Desire to count how many suffix-prefix alignments were done
 int ssmatch = -2;	
 int memo[smax][smax];
 
@@ -158,9 +158,19 @@ int main(int argc, char **argv)
 	printf("\tSequence 2: %s\n", s2);
 	int i, j;
 	
-	/* Just do half of it ;) */
-	for (i=0; i<smax; i++) {
-		memo[i][0] = i*gap;
+	
+	/* LETS DO THIS MDFCKR */
+	int Z;
+	if (m > n) {
+		Z = -1 * match * m;
+	} else {
+		Z = -1 * match * n;
+	}
+	
+	
+	memo[1][0] = Z;
+	for (i=2; i<=n; i++) {
+		memo[i][0] = memo[i-1][0] + gap;
 	}
 	
 	/* Start */
