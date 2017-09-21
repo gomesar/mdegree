@@ -21,8 +21,8 @@
  * 
  * Prefixal sufixal
  * 
- * -------XXXX
- *        XXXX-------
+ * SOMETHINGMMMMM
+ * ---------MMMMMOTHERTHING
  */
 
 
@@ -159,14 +159,13 @@ int main(int argc, char **argv)
 	int i, j;
 	
 	
-	/* LETS DO THIS MDFCKR */
+	/* Guarantee that no gaps are included before alpha */
 	int Z;
 	if (m > n) {
 		Z = -1 * match * m;
 	} else {
 		Z = -1 * match * n;
 	}
-	
 	
 	memo[1][0] = Z;
 	for (i=2; i<=n; i++) {
